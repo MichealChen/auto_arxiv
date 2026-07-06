@@ -2,36 +2,76 @@
 
 `auto_arxiv` 是一个 Windows 桌面应用，用来按你的研究兴趣自动推荐 arXiv 论文。普通用户只需要下载压缩包、解压、双击运行，不需要安装 Python，也不需要打开浏览器。
 
-## 下载
+## 安装教程
 
-Windows 版下载：
+`auto_arxiv` 目前提供 Windows x64 版本。请按下面步骤安装。
+
+### 1. 进入下载页面
+
+打开项目的 Releases 页面：
 
 ```text
-https://github.com/<你的GitHub用户名>/auto_arxiv/releases/latest/download/auto_arxiv-windows-x64.zip
+https://github.com/MichealChen/auto_arxiv/releases
 ```
 
-发布到 GitHub 后，把上面的 `<你的GitHub用户名>` 替换成你的 GitHub 用户名或组织名。每次发布新版时，用户仍然可以使用这个 `latest` 链接下载最新版。
+也可以直接下载最新版：
 
-## 普通用户使用教程
+```text
+https://github.com/MichealChen/auto_arxiv/releases/latest/download/auto_arxiv-windows-x64.zip
+```
 
-### 1. 安装
+### 2. 下载 x64 压缩包
 
-1. 下载 `auto_arxiv-windows-x64.zip`。
-2. 解压到一个固定目录，例如：
+在 Releases 页面中，找到最新版本，例如 `v0.1.0`。
+
+在页面下方的 `Assets` 区域，点击下载：
+
+```text
+auto_arxiv-windows-x64.zip
+```
+
+如果浏览器提示“此文件不常下载”，请选择保留。这个提示通常是因为软件还没有代码签名证书。
+
+### 3. 解压软件
+
+下载完成后，右键 `auto_arxiv-windows-x64.zip`，选择“全部解压”。
+
+建议解压到一个固定目录，例如：
 
 ```text
 D:\Apps\auto_arxiv\
 ```
 
-3. 打开解压后的文件夹，双击：
+解压后，文件夹里应该能看到：
+
+```text
+auto_arxiv.exe
+_internal\
+```
+
+注意：不要只移动或复制单独的 `auto_arxiv.exe`。`_internal` 文件夹必须和 `auto_arxiv.exe` 放在同一个目录，否则软件无法启动。
+
+### 4. 启动软件
+
+双击：
 
 ```text
 auto_arxiv.exe
 ```
 
-注意：不要只复制单独的 `auto_arxiv.exe`。应用需要同目录下的 `_internal/` 文件夹一起运行。
+第一次启动时，Windows 可能提示“Windows 已保护你的电脑”或“未知发布者”。
 
-### 2. 第一次配置账户
+如果你确认软件来自本项目 Release 页面，可以点击：
+
+```text
+更多信息 -> 仍要运行
+```
+
+软件启动后会自动在同目录创建配置和数据文件，不需要手动创建。
+
+## 使用教程
+
+### 1. 第一次配置账户
 
 打开软件后，点击左下角的“账户设置”。
 
@@ -45,7 +85,7 @@ auto_arxiv.exe
 
 保存后，账户设置窗口会自动关闭。
 
-### 3. 生成推荐
+### 2. 生成推荐
 
 主界面提供三种生成方式：
 
@@ -55,7 +95,7 @@ auto_arxiv.exe
 
 日期推荐会使用截至该日的滚动窗口，不会因为周末、假期或 arXiv 更新延迟就轻易出现“抓取 0”。
 
-### 4. 阅读论文
+### 3. 阅读论文
 
 生成后，左侧是推荐列表，右侧是论文详情。
 
@@ -67,13 +107,13 @@ auto_arxiv.exe
 - 点击“加入/移出待读列表”收藏值得之后阅读的论文。
 - 点击“标记已读/未读”管理阅读状态。
 
-### 5. 待读列表和笔记
+### 4. 待读列表和笔记
 
 进入“待读列表”页后，可以查看已收藏论文。点击一篇论文后，可以在右侧写阅读笔记，然后点击“保存笔记”。
 
 不同账户的待读列表和笔记彼此独立。
 
-### 6. 关注作者规则
+### 5. 关注作者规则
 
 关注作者是额外推荐通道：
 
@@ -82,7 +122,7 @@ auto_arxiv.exe
 - 关注作者论文不占用普通推荐数量 `limit`。
 - 关注作者论文不受普通评分阈值 `min_score` 影响。
 
-### 7. 数据保存在哪里
+### 6. 数据保存在哪里
 
 软件会在 `auto_arxiv.exe` 同目录自动创建这些文件夹和文件：
 
@@ -126,7 +166,7 @@ recommendations/     Markdown 推荐报告
 ### 1. 克隆项目
 
 ```powershell
-git clone https://github.com/<你的GitHub用户名>/auto_arxiv.git
+git clone https://github.com/MichealChen/auto_arxiv.git
 cd auto_arxiv
 ```
 
@@ -217,7 +257,7 @@ git init
 git add README.md 开发文档.md pyproject.toml config.example.toml auto_arxiv_desktop.spec scripts packaging public src tests .github .gitignore
 git commit -m "Initial release"
 git branch -M main
-git remote add origin https://github.com/<你的GitHub用户名>/auto_arxiv.git
+git remote add origin https://github.com/MichealChen/auto_arxiv.git
 git push -u origin main
 ```
 
