@@ -132,6 +132,52 @@ def test_followed_author_recommendations_use_keyword_tokens_without_min_score(tm
     assert followed[0].recommendation_reasons[0] == "Matched followed author: Jens Eisert"
 
 
+def test_followed_author_recommendations_respect_publication_window(tmp_path):
+    config = AppConfig(
+        profile=ProfileConfig(
+            name="Test",
+            categories=("quant-ph",),
+            keywords=("Quantum Information",),
+            exclude_keywords=(),
+            followed_authors=("Jens Eisert",),
+        ),
+        search=SearchConfig(days_back=2, max_results=10),
+        output=OutputConfig(
+            limit=1,
+            min_score=2.0,
+            directory=tmp_path / "recommendations",
+            data_directory=tmp_path / "data",
+            download_directory=tmp_path / "downloads",
+        ),
+    )
+    current = _paper(
+        title="Squeezed cat states",
+        abstract="Non-Gaussian quantum states are useful.",
+        categories=("quant-ph",),
+        authors=("Jens Eisert",),
+        arxiv_id="2607.02427",
+        published=datetime(2026, 7, 2, tzinfo=timezone.utc),
+    )
+    old = _paper(
+        title="Witness expansion",
+        abstract="Quantum information resource detection.",
+        categories=("quant-ph",),
+        authors=("Jens Eisert",),
+        arxiv_id="2606.27105",
+        published=datetime(2026, 6, 25, tzinfo=timezone.utc),
+    )
+
+    followed = followed_author_recommendations(
+        [current, old],
+        config=config,
+        now=NOW,
+        start_date=datetime(2026, 7, 2, tzinfo=timezone.utc).date(),
+        end_date=datetime(2026, 7, 2, tzinfo=timezone.utc).date(),
+    )
+
+    assert [item.paper.arxiv_id for item in followed] == ["2607.02427"]
+
+
 def _config(tmp_path):
     return AppConfig(
         profile=ProfileConfig(
@@ -152,15 +198,22 @@ def _config(tmp_path):
     )
 
 
-def _paper(title, abstract, categories, authors=("Ada Lovelace",)):
+def _paper(
+    title,
+    abstract,
+    categories,
+    authors=("Ada Lovelace",),
+    arxiv_id="2607.00001",
+    published=NOW,
+):
     return Paper(
-        arxiv_id="2607.00001",
+        arxiv_id=arxiv_id,
         title=title,
         abstract=abstract,
         authors=authors,
         categories=categories,
-        published=NOW,
-        updated=NOW,
-        abs_url="https://arxiv.org/abs/2607.00001",
-        pdf_url="https://arxiv.org/pdf/2607.00001",
+        published=published,
+        updated=published,
+        abs_url=f"https://arxiv.org/abs/{arxiv_id}",
+        pdf_url=f"https://arxiv.org/pdf/{arxiv_id}",
     )

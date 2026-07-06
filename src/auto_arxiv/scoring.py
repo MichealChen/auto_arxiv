@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 import re
 
 from .arxiv_client import Paper
@@ -55,6 +55,9 @@ def followed_author_recommendations(
     papers: list[Paper],
     config: AppConfig,
     now: datetime,
+    *,
+    start_date: date | None = None,
+    end_date: date | None = None,
 ) -> list[ScoredPaper]:
     followed = tuple(author.lower() for author in config.profile.followed_authors)
     if not followed:
@@ -63,6 +66,11 @@ def followed_author_recommendations(
     results: list[ScoredPaper] = []
     preferred_categories = set(config.profile.categories)
     for paper in papers:
+        paper_date = paper.published.date()
+        if start_date is not None and paper_date < start_date:
+            continue
+        if end_date is not None and paper_date > end_date:
+            continue
         if not any(
             followed_name in author.lower()
             for followed_name in followed

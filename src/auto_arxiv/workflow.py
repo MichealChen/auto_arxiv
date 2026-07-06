@@ -27,6 +27,7 @@ def generate_recommendations(
     generated_at: datetime | None = None,
 ) -> GenerationResult:
     now = generated_at or datetime.now(timezone.utc)
+    followed_lookback_days = max(config.search.days_back, 7)
     papers = fetch_recent_papers(
         categories=config.profile.categories,
         keywords=config.profile.keywords,
@@ -38,10 +39,19 @@ def generate_recommendations(
             categories=config.profile.categories,
             followed_authors=config.profile.followed_authors,
             max_results=config.search.max_results,
+            target_date=now.date(),
+            lookback_days=followed_lookback_days,
         ),
     )
     ranked = rank_papers(papers, config=config, now=now)
-    selected = _select_with_followed_authors(papers, ranked, config, now)
+    selected = _select_with_followed_authors(
+        papers,
+        ranked,
+        config,
+        now,
+        followed_start_date=now.date().fromordinal(now.date().toordinal() - followed_lookback_days),
+        followed_end_date=now.date(),
+    )
     markdown_path = write_markdown_report(selected, config=config, generated_at=now)
     data_path = write_recommendation_data(
         all_papers=papers,
@@ -82,7 +92,7 @@ def generate_recommendations_for_date(
             followed_authors=config.profile.followed_authors,
             max_results=config.search.max_results,
             target_date=target_date,
-            lookback_days=max(config.search.days_back, 7),
+            lookback_days=0,
         ),
     )
     ranked = rank_papers(
@@ -93,7 +103,14 @@ def generate_recommendations_for_date(
         reference_time=generated_at,
         include_recency_bonus=False,
     )
-    selected = _select_with_followed_authors(papers, ranked, config, generated_at)
+    selected = _select_with_followed_authors(
+        papers,
+        ranked,
+        config,
+        generated_at,
+        followed_start_date=target_date,
+        followed_end_date=target_date,
+    )
     markdown_path = write_markdown_report(selected, config=config, generated_at=generated_at)
     data_path = write_recommendation_data(
         all_papers=papers,
@@ -120,8 +137,17 @@ def _select_with_followed_authors(
     ranked: list[ScoredPaper],
     config: AppConfig,
     now: datetime,
+    *,
+    followed_start_date: date | None = None,
+    followed_end_date: date | None = None,
 ) -> list[ScoredPaper]:
-    extras = followed_author_recommendations(papers, config=config, now=now)
+    extras = followed_author_recommendations(
+        papers,
+        config=config,
+        now=now,
+        start_date=followed_start_date,
+        end_date=followed_end_date,
+    )
     extra_ids = {item.paper.arxiv_id for item in extras}
     regular = [item for item in ranked if item.paper.arxiv_id not in extra_ids][: config.output.limit]
     return extras + regular
