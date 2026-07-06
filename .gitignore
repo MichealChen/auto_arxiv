@@ -1,0 +1,28 @@
+# Python/cache
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Build outputs
+build/
+dist/
+release/
+
+# Local user configuration and private app data
+config.toml
+config.local.toml
+profiles.json
+data/
+downloads/
+recommendations/
+
+# Editor/OS noise
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+

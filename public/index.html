@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>auto_arxiv</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">auto_arxiv</p>
+        <h1>每日文献推荐</h1>
+      </div>
+      <div class="actions">
+        <select id="historySelect" aria-label="历史日期"></select>
+        <button id="refreshButton" type="button">刷新推荐</button>
+        <a id="exportJson" class="button secondary" href="data/recommendations.json" download>下载 JSON</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="summary" id="summary"></section>
+
+      <section class="toolbar" aria-label="筛选工具">
+        <input id="searchInput" type="search" placeholder="搜索标题、摘要、作者、关键词">
+        <select id="categoryFilter" aria-label="分类筛选">
+          <option value="">全部分类</option>
+        </select>
+        <select id="sortSelect" aria-label="排序">
+          <option value="score">按分数排序</option>
+          <option value="updated">按更新时间排序</option>
+          <option value="published">按发布时间排序</option>
+        </select>
+      </section>
+
+      <section id="status" class="status" role="status"></section>
+      <section id="paperList" class="paper-list"></section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

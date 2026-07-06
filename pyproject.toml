@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auto-arxiv"
+version = "0.1.0"
+description = "A local and deployable arXiv recommendation app based on configurable research interests."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "tomli>=2; python_version < '3.11'",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pyinstaller>=6"]
+
+[project.scripts]
+auto-arxiv = "auto_arxiv.cli:main"
+auto-arxiv-desktop = "auto_arxiv.desktop:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

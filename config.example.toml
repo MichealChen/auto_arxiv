@@ -1,0 +1,27 @@
+[profile]
+name = "My Research Radar"
+categories = ["cs.AI", "cs.LG", "cs.CL"]
+keywords = [
+  "large language model",
+  "agent",
+  "retrieval augmented generation",
+  "alignment",
+  "reasoning",
+]
+exclude_keywords = [
+  "position paper",
+  "tutorial",
+  "workshop",
+]
+followed_authors = []
+
+[search]
+days_back = 2
+max_results = 100
+
+[output]
+limit = 10
+min_score = 2.0
+directory = "recommendations"
+data_directory = "data"
+download_directory = "downloads"
